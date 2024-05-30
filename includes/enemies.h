@@ -10,35 +10,34 @@
 #include "my.h"
 #include "rpg.h"
 
-#define NB_MOBS 1
-#define NB_MOB_TYPES 5
+#define NB_MOBS 4
 #define NB_ATTACKS 2
 
 #define EN_ATK data->current_enemy->atk
-#define P_DEF data->player->def
+#define P_DEF data->player->def_cb
 #define P_HP data->player->hp
-#define ENEMY_DAMAGE (EN_ATK - P_DEF) > 0 ? (EN_ATK - P_DEF) : 1
-#define DAMAGE_TAKEN P_HP - ENEMY_DAMAGE
+#define DAMAGES (EN_ATK - P_DEF) < 1 ? 1 : (EN_ATK - P_DEF)
+#define TMP_EN_DMG data->player->atk_cb - data->current_enemy->def
+#define EN_DAMAGES TMP_EN_DMG < 1 ? 1 : TMP_EN_DMG
+
+#define BOSS_ATK "assets/attacks/stick.png"
 
 typedef enum attack_type_e {
     SLIME_ATTACK,
     SLIME_ATTACK2,
-    BUSH_ATTACK,
-    BUSH_ATTACK2,
-    SCARECROW_ATTACK,
-    SCARECROW_ATTACK2,
-    ARBRE_ATTACK,
-    ARBRE_ATTACK2,
-    KNGITH_ATTACK,
-    KNGITH_ATTACK2,
+    SKELETON_ATTACK,
+    SKELETON_ATTACK2,
+    TREANT_ATTACK,
+    TREANT_ATTACK2,
+    BOSS_ATTACK,
+    BOSS_ATTACK2,
 } attack_type_t;
 
 typedef enum mob_type_e {
     SLIME,
-    ARBRE,
-    BUSH,
-    SCARECROW,
-    KNGITH,
+    SKEL,
+    TRE,
+    BOSS,
 } mob_type_t;
 
 typedef struct attack_s {
@@ -96,5 +95,3 @@ typedef struct zone_s {
     sfSprite *bg;
     sfTexture *bg_text;
 } zone_t;
-
-void init_slime(data_t *data);

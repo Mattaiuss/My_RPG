@@ -19,8 +19,8 @@ void check_start_fight(data_t *data)
             data->combat->byakuya_used = 2;
         }
     }
-    data->current_enemy->life -= data->player->atk_cb -
-    data->current_enemy->def;
+    update_atk_cb(data);
+    data->current_enemy->life -= EN_DAMAGES;
     if (data->current_enemy->life <= 0) {
         sfMusic_stop(data->combat_music);
         sfMusic_play(data->music);
@@ -47,13 +47,94 @@ void print_animation_weapons(int id, int ty, sfSound *sound, sfSoundBuffer *bf)
         return print_punch_effect();
 }
 
+static void punch(data_t *data, sfSoundBuffer *buffer, sfSound *sound)
+{
+    (void)data;
+    buffer = sfSoundBuffer_createFromFile("assets/items/punch.ogg");
+    sound = sfSound_create();
+    print_animation_weapons(0, NONE, sound, buffer);
+    sfSleep(sfMilliseconds(1000));
+    sfSound_destroy(sound);
+    sfSoundBuffer_destroy(buffer);
+}
+
+static int check_norm_arm(box_t *equip, int weapon)
+{
+    if (equip == NULL)
+        return 0;
+    if (equip->item->weapon == weapon)
+        return 1;
+    return 0;
+}
+
+void if_3(data_t *data, sfSoundBuffer *buffer, sfSound *sound)
+{
+    if (check_norm_arm(data->player->inventory->equip[0], SWORD) == 1 ||
+    check_norm_arm(data->player->inventory->equip[1], SWORD) == 1) {
+        buffer = sfSoundBuffer_createFromFile("assets/items/sword.ogg");
+        sound = sfSound_create();
+        print_animation_weapons(0, SWORD, sound, buffer);
+        sfSleep(sfMilliseconds(200));
+        sfSound_destroy(sound);
+        sfSoundBuffer_destroy(buffer);
+    } else if (check_norm_arm(data->player->inventory->equip[0], MAGIC) == 1 ||
+    check_norm_arm(data->player->inventory->equip[1], MAGIC) == 1) {
+        buffer = sfSoundBuffer_createFromFile("assets/items/magic.ogg");
+        sound = sfSound_create();
+        print_animation_weapons(0, MAGIC, sound, buffer);
+        sfSleep(sfMilliseconds(2500));
+        sfSound_destroy(sound);
+        sfSoundBuffer_destroy(buffer);
+    } else
+        punch(data, buffer, sound);
+}
+
+static void if_2(data_t *data, sfSoundBuffer *buffer, sfSound *sound)
+{
+    int random_weapon = 0;
+
+    if ((check_norm_arm(data->player->inventory->equip[0], SWORD) == 1 &&
+    check_norm_arm(data->player->inventory->equip[1], MAGIC) == 1) ||
+    (check_norm_arm(data->player->inventory->equip[0], MAGIC) == 1 &&
+    check_norm_arm(data->player->inventory->equip[1], SWORD) == 1)) {
+        random_weapon = rand() % 2;
+        sound = sfSound_create();
+        if (random_weapon == 0) {
+            buffer = sfSoundBuffer_createFromFile("assets/items/sword.ogg");
+            print_animation_weapons(0, SWORD, sound, buffer);
+        } else {
+            buffer = sfSoundBuffer_createFromFile("assets/items/magic.ogg");
+            print_animation_weapons(0, MAGIC, sound, buffer);
+        }
+        sfSleep(sfMilliseconds(random_weapon == 0 ? 200 : 2500));
+        sfSound_destroy(sound);
+        sfSoundBuffer_destroy(buffer);
+    } else
+        if_3(data, buffer, sound);
+}
+
+static int check_spe_arm(data_t *data, int id)
+{
+    if (data->player->inventory->equip[0] == NULL &&
+    data->player->inventory->equip[1] == NULL)
+        return 0;
+    if (data->player->inventory->equip[0] != NULL) {
+        if (data->player->inventory->equip[0]->item->id == id)
+            return 1;
+    }
+    if (data->player->inventory->equip[1] != NULL) {
+        if (data->player->inventory->equip[1]->item->id == id)
+            return 1;
+    }
+    return 0;
+}
+
 int check_rukia(data_t *data)
 {
     sfSoundBuffer *buffer = NULL;
     sfSound *sound = NULL;
 
-    if ((data->player->inventory->equip[0]->item->id == 9 ||
-    data->player->inventory->equip[1]->item->id == 9) && data->combat->rukia
+    if (check_spe_arm(data, 9) == 1 && data->combat->rukia
     == sfTrue && data->combat->rukia_used == 0) {
         buffer = sfSoundBuffer_createFromFile("assets/items/rukia.ogg");
         sound = sfSound_create();
@@ -68,70 +149,12 @@ int check_rukia(data_t *data)
     return 0;
 }
 
-static void punch(data_t *data, sfSoundBuffer *buffer, sfSound *sound)
-{
-    (void)data;
-    buffer = sfSoundBuffer_createFromFile("assets/items/punch.ogg");
-    sound = sfSound_create();
-    print_animation_weapons(0, NONE, sound, buffer);
-    sfSleep(sfMilliseconds(500));
-    sfSound_destroy(sound);
-    sfSoundBuffer_destroy(buffer);
-}
-
-void if_3(data_t *data, sfSoundBuffer *buffer, sfSound *sound)
-{
-    if (data->player->inventory->equip[0]->item->weapon == SWORD ||
-    data->player->inventory->equip[1]->item->weapon == SWORD) {
-        buffer = sfSoundBuffer_createFromFile("assets/items/sword.ogg");
-        sound = sfSound_create();
-        print_animation_weapons(0, SWORD, sound, buffer);
-        sfSleep(sfMilliseconds(200));
-        sfSound_destroy(sound);
-        sfSoundBuffer_destroy(buffer);
-    } else if (data->player->inventory->equip[0]->item->weapon == MAGIC ||
-    data->player->inventory->equip[1]->item->weapon == MAGIC) {
-        buffer = sfSoundBuffer_createFromFile("assets/items/magic.ogg");
-        sound = sfSound_create();
-        sfSound_setBuffer(sound, buffer);
-        sfSound_play(sound);
-        print_animation_weapons(0, MAGIC, sound, buffer);
-        sfSleep(sfMilliseconds(2500));
-        sfSound_destroy(sound);
-        sfSoundBuffer_destroy(buffer);
-    } else
-        punch(data, buffer, sound);
-}
-
-static void if_2(data_t *data, sfSoundBuffer *buffer, sfSound *sound)
-{
-    int random_weapon = 0;
-
-    if ((data->player->inventory->equip[0]->item->weapon == SWORD &&
-    data->player->inventory->equip[1]->item->weapon == MAGIC) ||
-    (data->player->inventory->equip[0]->item->weapon == MAGIC &&
-    data->player->inventory->equip[1]->item->weapon == SWORD)) {
-        random_weapon = rand() % 2;
-        sound = sfSound_create();
-        if (random_weapon == 0) {
-            buffer = sfSoundBuffer_createFromFile("assets/items/sword.ogg");
-            print_animation_weapons(0, SWORD, sound, buffer);
-        } else {
-            buffer = sfSoundBuffer_createFromFile("assets/items/magic.ogg");
-            print_animation_weapons(0, MAGIC, sound, buffer);
-        }
-        sfSleep(sfMilliseconds(random_weapon == 0 ? 200 : 2500));
-    } else
-        if_3(data, buffer, sound);
-}
-
 static void check_arms(data_t *data)
 {
     sfSoundBuffer *buffer = NULL;
     sfSound *sound = NULL;
 
-    if ((data->player->inventory->equip[0]->item->id == 8 ||
-    data->player->inventory->equip[1]->item->id == 8) && data->combat->byakuya
+    if (check_spe_arm(data, 8) == 1 && data->combat->byakuya
     == sfTrue && data->combat->byakuya_used == 0) {
         buffer = sfSoundBuffer_createFromFile("assets/items/byakuya.ogg");
         sound = sfSound_create();

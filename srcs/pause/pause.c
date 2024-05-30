@@ -44,6 +44,8 @@ void pause_wind(data_t *data)
         } else
             draw_sprite_game(data);
         draw_pause(data);
+        draw_quest(data);
+        data->quest->func(data);
         sfRenderWindow_display(data->window->window);
         sfClock_restart(data->window->clock);
     }

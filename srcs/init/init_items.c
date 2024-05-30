@@ -20,6 +20,10 @@ static void init_items6(data_t *data)
     init_item_atk(17, 0, data);
     init_item_def_hp(17, 40, 0, data);
     init_item_gold_drop_rate(17, 60, 0.1, data);
+    data->combat->byakuya_used = 0;
+    data->combat->rukia_used = 0;
+    data->combat->rukia = sfTrue;
+    data->combat->byakuya = sfTrue;
 }
 
 static void init_items5(data_t *data)

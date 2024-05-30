@@ -47,10 +47,10 @@ void draw_texts(data_t *data, item_texts_t txt, box_t *tmp)
 
     sfText_setCharacterSize(data->pause->text, 18);
     txt.name = add_newline_if_needed(D_PAUSE->text, D_PAUSE->action_sprite,
-    txt.name);
+    txt.name, 170);
     drawact_text(data, txt.name, (sfVector2f){PX + 430, PY + 53}, 2);
     txt.desc = add_newline_if_needed(D_PAUSE->text, D_PAUSE->action_sprite,
-    txt.desc);
+    txt.desc, 170);
     drawact_text(data, txt.desc, (sfVector2f){PX + 400, PY + 123}, 0);
     ms = count_newlines(txt.desc) * 18;
     drawact_text(data, txt.type, (sfVector2f){PX + 400, PY + 183 + ms}, 0);

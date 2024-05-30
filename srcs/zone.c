@@ -11,10 +11,9 @@
 void is_p_in_zone(data_t *data)
 {
     if (data->player->isgm == sfTrue) {
-        sfRenderWindow_drawRectangleShape(data->window->window,
-        data->zones[0]->shape, NULL);
-        sfRenderWindow_drawRectangleShape(data->window->window,
-        data->zones[1]->shape, NULL);
+        for (int i = 0; i != 3; i ++)
+            sfRenderWindow_drawRectangleShape(data->window->window,
+            data->zones[i]->shape, NULL);
     }
     for (int i = 0; i != NB_ZONES; i ++) {
         if (data->player->pos.x > data->zones[i]->pos.x &&

@@ -59,10 +59,11 @@ data_t *init_data(void)
     init_soul(data);
     init_player(data);
     init_pause(data);
-    init_npc(data);
     init_items(data);
     init_inventory(data);
     get_collisions(data);
+    init_quest(data);
+    init_npc(data);
     return (data);
 }
 
@@ -82,10 +83,12 @@ static void game_loop(data_t *data)
         settings(data);
     restart_music(data);
     while (data->scene == GAME || data->scene == PAUSE ||
-    data->scene == COMBAT)
+    data->scene == COMBAT || data->scene == DIALOGUE || data->scene == SHOP)
         game(data);
     while (data->scene == GAME_OVER)
         display_go(data);
+    while (data->scene == END)
+        display_end(data);
     if (data->scene == -1)
         return;
 }
@@ -98,7 +101,7 @@ int my_rpg(void)
     sfRenderWindow_setIcon(data->window->window, 1600,
     1600, sfImage_getPixelsPtr(icon));
     srand(time(NULL));
-    while (data->scene != -1) {
+    while (data->scene != -1 && sfRenderWindow_isOpen(data->window->window)) {
         game_loop(data);
     }
     sfMusic_stop(data->music);

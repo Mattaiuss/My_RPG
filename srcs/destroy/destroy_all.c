@@ -15,6 +15,7 @@ static void destroy_window(window_t *window)
     sfView_destroy(window->gameview);
     sfSprite_destroy(window->mouse->sprite);
     sfTexture_destroy(window->mouse->texture);
+    sfRenderWindow_destroy(window->window);
     free(window->mouse);
 }
 
@@ -73,14 +74,30 @@ void destroy_enemies(data_t *data)
     free(data->enemies);
 }
 
-void destroy_all(data_t *data)
+static void destroy_volume(data_t *data)
 {
-    destroy_window(data->window);
-    destroy_param(data->param[0]);
-    destroy_menu(data->menu);
-    destroy_game(data->game);
-    destroy_pause(data->pause);
-    destroy_combat(data->combat);
+    sfSprite_destroy(data->volume[0]->sprite);
+    sfTexture_destroy(data->volume[0]->texture);
+    sfSprite_destroy(data->volume[1]->sprite);
+    sfTexture_destroy(data->volume[1]->texture);
+    free(data->volume[0]);
+    free(data->volume[1]);
+    free(data->volume);
+}
+
+static void destroy_binds(data_t *data)
+{
+    sfSprite_destroy(data->binds[0]->sprite);
+    sfTexture_destroy(data->binds[0]->texture);
+    sfSprite_destroy(data->binds[1]->sprite);
+    sfTexture_destroy(data->binds[1]->texture);
+    free(data->binds[0]);
+    free(data->binds[1]);
+    free(data->binds);
+}
+
+static void destroy_data(data_t *data)
+{
     free(data->keys);
     sfFont_destroy(data->font);
     sfMusic_destroy(data->music);
@@ -90,5 +107,22 @@ void destroy_all(data_t *data)
     destroy_zones(data->zones);
     destroy_enemies(data);
     sfMusic_destroy(data->combat_music);
+    destroy_volume(data);
+    destroy_binds(data);
+    sfSound_stop(data->sound);
+    sfSoundBuffer_destroy(data->buffer);
+    sfSound_destroy(data->sound);
+    free(data->collision_map);
+}
+
+void destroy_all(data_t *data)
+{
+    destroy_window(data->window);
+    destroy_param(data->param[0]);
+    destroy_menu(data->menu);
+    destroy_game(data->game);
+    destroy_pause(data->pause);
+    destroy_combat(data->combat);
+    destroy_data(data);
     free(data);
 }

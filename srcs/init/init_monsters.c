@@ -13,4 +13,7 @@ void init_monsters(data_t *data)
     data->enemies = malloc(sizeof(enemy_t *) * NB_MOBS);
     data->current_enemy = NULL;
     init_slime(data);
+    init_treant(data);
+    init_skeleton(data);
+    init_boss(data);
 }

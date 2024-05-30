@@ -23,10 +23,11 @@ void init_zone1(data_t *data)
     sfTexture_createFromFile("assets/zones/wood.png", NULL);
     sfSprite_setTexture(data->zones[0]->bg, data->zones[0]->bg_text, sfTrue);
     sfSprite_setScale(data->zones[0]->bg, (sfVector2f){3.2, 3.1});
-    data->zones[0]->spawn_rate = 650;
+    data->zones[0]->spawn_rate = 500;
     data->zones[0]->nb_mobs = 50;
-    data->zones[0]->nb_mob_types = 1;
+    data->zones[0]->nb_mob_types = 2;
     data->zones[0]->mob_types = malloc(sizeof(int) *
     data->zones[0]->nb_mob_types);
     data->zones[0]->mob_types[0] = SLIME;
+    data->zones[0]->mob_types[1] = TRE;
 }

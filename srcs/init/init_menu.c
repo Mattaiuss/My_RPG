@@ -105,11 +105,13 @@ void init_menu(data_t *data)
     data->menu->bg_sprite = sfSprite_create();
     data->menu->background = sfTexture_createFromFile(MENU_S, NULL);
     sfSprite_setTexture(data->menu->bg_sprite, data->menu->background, sfTrue);
-    sfSprite_setScale(data->menu->bg_sprite, (sfVector2f){2.2, 2.4});
+    sfSprite_setScale(data->menu->bg_sprite, (sfVector2f){0.85, 0.85});
     sfSprite_setPosition(data->menu->bg_sprite, (sfVector2f){-100, 0});
     data->menu->nb_buttons = 3;
     data->menu->buttons = malloc(sizeof(button_t) * data->menu->nb_buttons);
     init_but0(data);
     init_but1(data);
     init_but2(data);
+    data->sound = sfSound_create();
+    data->buffer = sfSoundBuffer_createFromFile("assets/musics/menu.ogg");
 }

@@ -103,7 +103,7 @@ void display_pause_item(data_t *data)
 static void index_4(data_t *data)
 {
     if (data->pause->index == 3)
-        write(1, "SAVE\n", 5);
+        save_game(data);
     if (data->pause->index == 4) {
         data->prev_scene = PAUSE;
         data->scene = MENU;

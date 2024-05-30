@@ -24,6 +24,7 @@ SRC	=	srcs/window.c \
 		srcs/menu_but_foncs.c \
 		srcs/menu.c \
 		srcs/game.c \
+		srcs/dialogue.c \
 		srcs/disp_saves.c \
 		srcs/settings.c \
 		srcs/events.c \
@@ -45,8 +46,16 @@ SRC	=	srcs/window.c \
 		srcs/spawn_enemy.c \
 		srcs/init/zones/field_zone.c \
 		srcs/init/zones/forest_zone.c \
+		srcs/init/init_npc.c \
+		srcs/init/npcs/init_npc03.c \
+		srcs/init/npcs/init_npc47.c \
+		srcs/init/npcs/init_npc811.c \
+		srcs/init/npcs/init_npc1215.c \
+		srcs/init/npcs/init_npc1617.c \
 		srcs/init/init_monsters.c \
 		srcs/init/monsters/init_slime.c \
+		srcs/init/monsters/init_treant.c \
+		srcs/init/monsters/init_skeleton.c \
 		srcs/init/attacks/init_attacks.c \
 		srcs/combat/combat_actions.c \
 		srcs/combat/combat.c \
@@ -54,8 +63,19 @@ SRC	=	srcs/window.c \
 		srcs/combat/print_effects.c \
 		srcs/combat/set_endfight.c \
 		srcs/combat/disp_additionnal.c \
+		srcs/quest/init_quests.c \
+		srcs/quest/init_quest69.c \
+		srcs/quest/quest_foncs.c \
+		srcs/quest/quest_foncs2.c \
+		srcs/quest/quest_foncs3.c \
+		srcs/save_game.c \
 		srcs/destroy/destroy_all.c \
 		srcs/destroy/destroy_scenes.c \
+		srcs/init/init_volume.c \
+		srcs/play_sound.c \
+		srcs/init/monsters/init_boss.c \
+		srcs/init/zones/boss_zone.c \
+		srcs/display_end.c \
 
 OBJ	=	$(SRC:.c=.o)
 

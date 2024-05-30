@@ -24,7 +24,7 @@ void buttons_pos(data_t *data)
     sfMusic_play(data->combat_music);
 }
 
-static void init_combat(data_t *data)
+void init_combat(data_t *data)
 {
     int mob_type;
     int mob;
@@ -35,7 +35,6 @@ static void init_combat(data_t *data)
     data->current_enemy = data->enemies[mob];
     sfSprite_setPosition(data->current_enemy->sprite,
     (sfVector2f){data->player->pos.x - 68, data->player->pos.y + 45});
-    sfSprite_setScale(data->current_enemy->sprite, (sfVector2f){5, 5});
     data->soul->pos = (sfVector2f){data->player->pos.x - 5,
         data->player->pos.y - 100};
     data->combat->status = 0;
@@ -46,6 +45,7 @@ static void init_combat(data_t *data)
         data->player->pos.y - (HEIGHT / 3) + 10});
     data->scene = COMBAT;
     buttons_pos(data);
+    play_sound(data, "assets/btl.ogg");
 }
 
 void check_spawn_enemy(data_t *data)

@@ -23,11 +23,10 @@ void set_item_box(data_t *data, box_t *box, int id)
     box->item->gold = data->item[box->item->id].gold;
     box->item->texture = data->item[box->item->id].texture;
     box->item->sprite = data->item[box->item->id].sprite;
-    if (box->item->id == 8 || box->item->id == 9) {
+    if (box->item->id == 8 || box->item->id == 9)
         sfSprite_setScale(box->item->sprite, (sfVector2f){1.8, 1.8});
-    } else {
+    else
         sfSprite_setScale(box->item->sprite, (sfVector2f){3.6, 3.6});
-    }
 }
 
 void init_inventory_items(data_t *data)
@@ -39,7 +38,10 @@ void init_inventory_items(data_t *data)
         data->player->inventory->invento[i]->size = (sfVector2f){0, 0};
         data->player->inventory->invento[i]->texture = NULL;
         data->player->inventory->invento[i]->sprite = NULL;
-        set_item_box(data, data->player->inventory->invento[i], i + 7);
+        if (i == 0)
+            set_item_box(data, data->player->inventory->invento[i], 0);
+        else
+            data->player->inventory->invento[i] = NULL;
     }
 }
 
@@ -52,7 +54,7 @@ void init_inventory_equipment(data_t *data)
         data->player->inventory->equip[i]->size = (sfVector2f){0, 0};
         data->player->inventory->equip[i]->texture = NULL;
         data->player->inventory->equip[i]->sprite = NULL;
-        set_item_box(data, data->player->inventory->equip[i], 7);
+        data->player->inventory->equip[i] = NULL;
     }
 }
 

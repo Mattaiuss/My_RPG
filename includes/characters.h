@@ -11,6 +11,7 @@
 #define PL data->player
 #define SOUL data->soul
 #define ENEMY data->current_enemy
+#define NPC data->current_npc
 
 typedef struct item_s {
     int id;
@@ -46,31 +47,10 @@ typedef struct inventory_s {
     box_t *equip[2];
 } inventory_t;
 
-typedef struct conversation_s {
-    int status;
-    int nb_lines;
-    sfText **text;
-    struct conversation_t *next;
-} conversation_t;
-
-typedef struct npc_s {
-    char *name;
-    sfVector2f pos;
-
-    sfTexture *texture;
-    sfSprite *sprite;
-    sfIntRect rect;
-
-    struct npc_t *next;
-} npc_t;
-
 typedef struct soul_s {
     sfTexture *texture;
     sfSprite *sprite;
     sfVector2f pos;
-
-    int life;
-    int max_life;
 } soul_t;
 
 typedef struct player_s {
@@ -81,12 +61,9 @@ typedef struct player_s {
 
     sfClock *clock;
     sfClock *effect_clock;
-    sfTime pause_time;
-    int is_paused;
 
     char *name;
     int speed;
-    int ROUTE;
     int atk;
     int atk_cb;
     int def;
@@ -100,4 +77,5 @@ typedef struct player_s {
     int gold;
     inventory_t *inventory;
     sfBool isgm;
+    sfBool nearnpc;
 } player_t;

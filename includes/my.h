@@ -30,8 +30,14 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <math.h>
+#include <stdbool.h>
 #include "characters.h"
 #include "rpg.h"
+#include "npcs.h"
+#include "enemies.h"
+#include "scenes.h"
+#include "save.h"
 
 #define JOYSTICK_THRESHOLD 50
 #define WIDTH 1600
@@ -48,10 +54,13 @@
 
 #define ITEMS "assets/items/item"
 
+#define DIAL "assets/dialogues/dialogue"
+#define DIAL_HEAD "assets/npcs/npc_head.png"
+
 #define MAP_BAS "assets/game/mapbas.png"
 #define MAP_HAUT "assets/game/maphaut.png"
 
-#define NB_ZONES 2
+#define NB_ZONES 3
 
 #define BYAKUYA3 " it multiplies your atk by 1.5."
 #define BYAKUYA2 " if you attack with this equipped weapon," BYAKUYA3
@@ -121,7 +130,6 @@ void init_keys(data_t *data);
 void init_player(data_t *data);
 void init_basics(data_t *data);
 void init_soul(data_t *data);
-void init_npc(data_t *data);
 
 void init_item_def_hp(int id, int def, int hp, data_t *data);
 void init_item_gold_drop_rate(int id, int gold, float drop_rate, data_t *data);
@@ -135,6 +143,7 @@ int check_if_inventory_is_full(data_t *data);
 void settings(data_t *data);
 void menu(data_t *data);
 void game(data_t *data);
+void dialogue(data_t *data, npc_t *npc);
 void combat(data_t *data);
 void set_gameover(data_t *data);
 void set_karmaover(data_t *data);
@@ -142,6 +151,7 @@ void set_mercyover(data_t *data);
 void fight(data_t *data);
 void pause_wind(data_t *data);
 void draw_pause_texts(data_t *data);
+void draw_quest(data_t *data);
 void draw_text(data_t *data, char *str, sfVector2f pos, int index);
 void drawitm_text(data_t *data, char *str, sfVector2f pos, int index);
 void drawact_text(data_t *data, char *str, sfVector2f pos, int index);
@@ -164,6 +174,10 @@ void display_pause_item(data_t *data);
 void draw_saves(data_t *data);
 void check_effect_clock(data_t *data);
 void restart_music(data_t *data);
+void set_item_box(data_t *data, box_t *box, int id);
+void add_new_item(data_t *data, int place, int id);
+int search_first_place(int size, data_t *data);
+sfText *create_text(data_t *data, sfVector2f position, sfColor color, int siz);
 
 //srcs/pause/draw_item_infos.c
 void draw_texts(data_t *data, item_texts_t txt, box_t *tmp);
@@ -192,6 +206,7 @@ void move_rect(player_t *player, int min, int max);
 void is_p_in_zone(data_t *data);
 void check_spawn_enemy(data_t *data);
 
+void init_zone3(data_t *data);
 void init_zone2(data_t *data);
 void init_zone1(data_t *data);
 
@@ -199,12 +214,22 @@ void init_monsters(data_t *data);
 typedef struct attack_s attack_t;
 attack_t *copy_attack(attack_t *attack, char *path);
 void init_slime(data_t *data);
+void init_treant(data_t *data);
+void init_skeleton(data_t *data);
+void init_boss(data_t *data);
 void do_action(data_t *data);
+
+void init_npc(data_t *data);
+void init_npc03(data_t *data);
+void init_npc47(data_t *data);
+void init_npc811(data_t *data);
+void init_npc1215(data_t *data);
+void init_npc1617(data_t *data);
 
 //lib/manage_line.c
 char *allocate_text(char *str, char *text);
 int find_last_space_within_width(sfText *text, char *str, float width);
-char *add_newline_if_needed(sfText *text, sfSprite *sprite, char *str);
+char *add_newline_if_needed(sfText *, sfSprite *, char *, int);
 int count_newlines(char *str);
 
 void print_sword_effect(void);
@@ -213,6 +238,7 @@ void print_punch_effect(void);
 void print_rukia_effect(void);
 void print_byakuya_effect(void);
 
+void set_scenes(data_t *data, int scene);
 void disp_additionnal(data_t *data);
 void display_go(data_t *data);
 
@@ -222,3 +248,28 @@ void destroy_game(game_t *game);
 void destroy_pause(pause_t *pause);
 void destroy_combat(combat_t *combat);
 void destroy_all(data_t *data);
+
+void init_quest(data_t *data);
+void init_quest6(data_t *data);
+void init_quest7(data_t *data);
+void init_quest8(data_t *data);
+void init_quest9(data_t *data);
+void init_quest10(data_t *data);
+void check_move(data_t *data);
+void quest2(data_t *data);
+void quest3(data_t *data);
+void quest4(data_t *data);
+void quest5(data_t *data);
+void quest6(data_t *data);
+void quest7(data_t *data);
+void quest8(data_t *data);
+void quest9(data_t *data);
+void quest10(data_t *data);
+void skip_quest(data_t *data);
+
+void save_game(data_t *data);
+void init_combat(data_t *data);
+void init_volume(data_t *data);
+void update_atk_cb(data_t *data);
+void display_end(data_t *data);
+void play_sound(data_t *data, char *path);

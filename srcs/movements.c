@@ -61,6 +61,29 @@ static void check_movements(data_t *data, float speed)
     }
 }
 
+void check_near_npc(data_t *data)
+{
+    float dx = 0;
+    float dy = 0;
+    float distance_squared = 0;
+
+    for (int i = 0; i < NB_NPC; i++) {
+        dx = data->npcs[i]->pos.x - data->player->pos.x;
+        dy = data->npcs[i]->pos.y - data->player->pos.y;
+        distance_squared = dx * dx + dy * dy;
+        if (distance_squared < 100 * 100) {
+            data->current_npc = data->npcs[i];
+            data->player->nearnpc = sfTrue;
+            break;
+        }
+        data->current_npc = NULL;
+        data->player->nearnpc = sfFalse;
+    }
+    if (data->player->nearnpc == sfTrue)
+        if (data->keys->interact_pressed == sfTrue)
+            data->scene = DIALOGUE;
+}
+
 void move_map(data_t *data)
 {
     int speed = data->keys->shift_pressed ? data->player->speed * 2 :
@@ -80,4 +103,5 @@ void move_map(data_t *data)
     check_movements(data, speed);
     is_not_moving(data);
     sfSprite_setPosition(data->player->sprite, data->player->pos);
+    check_near_npc(data);
 }

@@ -53,7 +53,7 @@ void check_key_pressed2(data_t *data)
         data->keys->back_pressed = sfTrue;
 }
 
-static void set_scenes(data_t *data, int scene)
+void set_scenes(data_t *data, int scene)
 {
     if (data->scene == GAME) {
         data->prev_scene = GAME;
@@ -102,12 +102,11 @@ void check_key_pressed(data_t *data)
         else
             data->player->isgm = sfTrue;
     }
-    if (data->window->event.key.code == sfKeySpace)
-        printf("x: %f y: %f\n", data->player->pos.x - data->soul->pos.x,
-        data->player->pos.y - data->soul->pos.y);
+    if (data->window->event.key.code == sfKeyK)
+        printf("pos: %f %f\n", data->player->pos.x, data->player->pos.y);
 }
 
-void check_key_released2(data_t *data)
+static void check_key_released2(data_t *data)
 {
     if (data->window->event.key.code == data->keys->interact)
         data->keys->interact_pressed = sfFalse;
@@ -121,6 +120,8 @@ void check_key_released2(data_t *data)
         data->keys->back_pressed = sfFalse;
     if (data->window->event.key.code == sfKeyI)
         data->keys->is_inventory_pressed = sfFalse;
+    if (data->window->event.key.code == sfKeyK)
+        data->keys->is_dialogue_pressed = sfFalse;
 }
 
 void check_key_released(data_t *data)

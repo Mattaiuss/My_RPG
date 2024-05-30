@@ -139,6 +139,7 @@ static void draw_name_and_stat(data_t *data)
     draw_text(data, hp, (sfVector2f){PX + 335, PY + 110}, -1);
     draw_text(data, karma, (sfVector2f){PX + 335, PY + 245}, -1);
     free_name_and_stat(name, lv, hp, arms_hp);
+    free(karma);
 }
 
 void display_pause_stats(data_t *data)

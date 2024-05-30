@@ -10,7 +10,8 @@
 
 void init_params3(data_t *data)
 {
-    data->param[0]->buttons[0]->pos = (sfVector2f){WIDTH / 4, HEIGHT / 4};
+    data->param[0]->buttons[0]->pos = (sfVector2f){WIDTH / 4 - 60,
+    HEIGHT / 4 - 80};
     sfSprite_setPosition(data->param[0]->buttons[0]->sprite,
     data->param[0]->buttons[0]->pos);
     data->param[0]->buttons[0]->callback = &return_menu;
@@ -46,6 +47,7 @@ void init_params(data_t *data)
     sfVector2u window_size;
     sfVector2f scale;
 
+    data->vol = 50;
     for (int i = 0; i < 1; i++)
         data->param[i] = malloc(sizeof(param_t));
     data->param[0]->bg_sprite = sfSprite_create();

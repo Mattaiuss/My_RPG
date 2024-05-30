@@ -70,6 +70,15 @@ void disp_karma(data_t *data)
     sfRectangleShape_destroy(karma);
 }
 
+void update_atk_cb(data_t *data)
+{
+    data->player->atk_cb = data->player->atk;
+    if (data->player->inventory->equip[0] != NULL)
+        data->player->atk_cb += data->player->inventory->equip[0]->item->atk;
+    if (data->player->inventory->equip[1] != NULL)
+        data->player->atk_cb += data->player->inventory->equip[1]->item->atk;
+}
+
 void disp_additionnal(data_t *data)
 {
     disp_player_hp(data);

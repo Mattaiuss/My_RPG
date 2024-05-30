@@ -10,6 +10,9 @@
 
 void drop_item(data_t *data, int index)
 {
+    if (atoi(&data->quest->title[6]) < 4 &&
+    data->player->inventory->invento[index]->item->id == 0)
+        return;
     data->player->inventory->invento[index] = NULL;
     data->pause->action_index = 0;
     data->pause->status = 1;

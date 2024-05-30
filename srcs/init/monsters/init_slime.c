@@ -63,6 +63,7 @@ static void init_slime2(data_t *data)
     data->enemies[SLIME]->sprite = sfSprite_create();
     sfSprite_setTexture(data->enemies[SLIME]->sprite,
     data->enemies[SLIME]->texture, sfTrue);
+    sfSprite_setScale(data->enemies[SLIME]->sprite, (sfVector2f){5, 5});
     data->enemies[SLIME]->nb_waves = 2;
     data->enemies[SLIME]->waves = malloc(sizeof(wave_t *) *
     data->enemies[SLIME]->nb_waves);
@@ -82,10 +83,10 @@ void init_slime(data_t *data)
     data->enemies[SLIME]->pos = (sfVector2f){100, 100};
     data->enemies[SLIME]->act = 3;
     data->enemies[SLIME]->max_act = data->enemies[SLIME]->act;
-    data->enemies[SLIME]->atk = 2;
-    data->enemies[SLIME]->def = 0;
-    data->enemies[SLIME]->life = 20;
-    data->enemies[SLIME]->max_life = 20;
+    data->enemies[SLIME]->atk = 20;
+    data->enemies[SLIME]->def = 10;
+    data->enemies[SLIME]->life = 50;
+    data->enemies[SLIME]->max_life = 50;
     data->enemies[SLIME]->xp = 10;
     data->enemies[SLIME]->gold = 5;
     init_slime2(data);

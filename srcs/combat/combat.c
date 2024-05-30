@@ -27,20 +27,23 @@ void move_soul(data_t *data)
 
 static void move_fight_index(data_t *data)
 {
-    if (data->keys->interact_pressed == sfTrue)
-        do_action(data);
-    if (sfTime_asMilliseconds(sfClock_getElapsedTime(data->combat->act_clock))
-    < 130)
-        return;
-    if (data->keys->right_pressed == sfTrue)
+    if (data->keys->right_pressed == sfTrue) {
         data->combat->index_button++;
-    if (data->keys->left_pressed == sfTrue)
+        data->keys->right_pressed = sfFalse;
+    }
+    if (data->keys->left_pressed == sfTrue) {
         data->combat->index_button--;
+        data->keys->left_pressed = sfFalse;
+    }
     if (data->combat->index_button < 0)
         data->combat->index_button = 3;
     if (data->combat->index_button > 3)
         data->combat->index_button = 0;
     sfClock_restart(data->combat->act_clock);
+    if (data->keys->interact_pressed == sfTrue) {
+        do_action(data);
+        data->keys->interact_pressed = sfFalse;
+    }
 }
 
 static void disp_fight_buttons(data_t *data)
@@ -68,21 +71,41 @@ void disp_act(data_t *data)
     disp_fight_buttons(data);
 }
 
+static void update_defense(data_t *data)
+{
+    data->player->def_cb = data->player->def;
+    if (data->player->inventory->equip[0] != NULL)
+        data->player->def_cb += data->player->inventory->equip[0]->item->def;
+    if (data->player->inventory->equip[1] != NULL)
+        data->player->def_cb += data->player->inventory->equip[1]->item->def;
+    if (data->player->def_cb < 0)
+        data->player->def_cb = 1;
+}
+
 static void is_soul_touched(data_t *data)
 {
     sfFloatRect soul_rect = sfSprite_getGlobalBounds(data->soul->sprite);
     sfFloatRect atk_rect;
 
+    update_defense(data);
     for (int i = 0; i < data->combat->current_wave->nb_attacks; i++) {
         atk_rect = sfSprite_getGlobalBounds(
             data->combat->current_wave->attacks[i]->sprite);
         if (sfFloatRect_intersects(&soul_rect, &atk_rect, NULL) == sfTrue) {
-            data->player->hp = DAMAGE_TAKEN;
+            data->player->hp -= DAMAGES;
             data->combat->status = 0;
+            data->soul->pos = (sfVector2f){data->player->pos.x - 5,
+                data->player->pos.y - 100};
+            sfSprite_setPosition(data->soul->sprite, data->soul->pos);
         }
     }
-    if (data->player->hp <= 0)
+    if (data->player->hp <= 0) {
+        data->current_enemy->life = data->current_enemy->max_life;
+        data->current_enemy->act = data->current_enemy->max_act;
+        sfMusic_stop(data->combat_music);
+        sfMusic_play(data->music);
         data->scene = GAME_OVER;
+    }
 }
 
 static void disp_attacks(data_t *data)
@@ -130,6 +153,7 @@ void combat_loop(data_t *data)
         disp_combat(data);
     if (data->current_enemy != NULL)
         disp_additionnal(data);
+    data->quest->func(data);
     sfRenderWindow_display(data->window->window);
     sfClock_restart(data->window->clock);
 }

@@ -113,6 +113,7 @@ void init_window(data_t *data)
     sfSprite_setPosition(data->window->mouse->sprite,
     data->window->mouse->pos);
     data->window->mouse_pos = (sfVector2f){0, 0};
+    sfRenderWindow_setFramerateLimit(data->window->window, 60);
 }
 
 void init_basics(data_t *data)
@@ -129,7 +130,12 @@ void init_basics(data_t *data)
     sfView_createFromRect((sfFloatRect){0, 0, WIDTH, HEIGHT});
     data->window->view_pos = (sfVector2f){0, 0};
     data->font = sfFont_createFromFile("assets/font.ttf");
+    data->dialogue_sprite = sfSprite_create();
+    data->dialogue_texture = sfTexture_createFromFile(DIAL_HEAD, NULL);
+    sfSprite_setTexture(data->dialogue_sprite, data->dialogue_texture, sfTrue);
     data->player = malloc(sizeof(player_t));
     init_zones(data);
     init_monsters(data);
+    data->volume = malloc(sizeof(button_t *) * 2);
+    init_volume(data);
 }

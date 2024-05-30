@@ -12,7 +12,7 @@ void init_zone2(data_t *data)
 {
     data->zones[1]->shape = malloc(sizeof(sfRectangleShape *));
     data->zones[1]->shape = sfRectangleShape_create();
-    data->zones[1]->pos = (sfVector2f){4589, 3923};
+    data->zones[1]->pos = (sfVector2f){4740, 3923};
     data->zones[1]->size = (sfVector2f){3159, 1002};
     sfRectangleShape_setPosition(data->zones[1]->shape, data->zones[1]->pos);
     sfRectangleShape_setSize(data->zones[1]->shape, data->zones[1]->size);
@@ -23,8 +23,11 @@ void init_zone2(data_t *data)
     sfTexture_createFromFile("assets/zones/field.jpg", NULL);
     sfSprite_setTexture(data->zones[1]->bg, data->zones[1]->bg_text, sfTrue);
     sfSprite_setScale(data->zones[1]->bg, (sfVector2f){0.73, 0.8});
-    data->zones[1]->spawn_rate = 600;
-    data->zones[1]->nb_mobs = 0;
-    data->zones[1]->nb_mob_types = 0;
-    data->zones[1]->mob_types = NULL;
+    data->zones[1]->spawn_rate = 500;
+    data->zones[1]->nb_mobs = 50;
+    data->zones[1]->nb_mob_types = 2;
+    data->zones[1]->mob_types = malloc(sizeof(int) *
+    data->zones[1]->nb_mob_types);
+    data->zones[1]->mob_types[0] = SLIME;
+    data->zones[1]->mob_types[1] = SKEL;
 }
